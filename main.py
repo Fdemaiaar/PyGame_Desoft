@@ -1,4 +1,9 @@
 import pygame
 import random
 import funcoes
-from funcoes import *
+
+# Iniciando o pygame
+pygame.init()
+
+# criando a tela
+screen = pygame.display.set_mode((800, 600))
