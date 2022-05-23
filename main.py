@@ -1,4 +1,4 @@
 import pygame
 import random
-import funções
-
+import funcoes
+from funcoes import *
