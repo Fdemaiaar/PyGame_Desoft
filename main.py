@@ -11,9 +11,9 @@ y = 480
 
 # Posições iniciais dos Carros
 ladrao_x = 200
-ladrao_y = 120
+ladrao_y = 230
 policia_x = 300
-policia_y = 250
+policia_y = 350
 
 # criando a tela
 screen = pygame.display.set_mode((x,y))
