@@ -23,21 +23,23 @@ pygame.display.set_caption('DustChase')
 bg = pygame.image.load('imagens/bg.jpg').convert_alpha()
 bg = pygame.transform.scale(bg, (x,y))
 
-# Carros
+# Imagens Carros
 ladrao = pygame.image.load('imagens/ladrao.png').convert_alpha()
 ladrao = pygame.transform.scale(ladrao, (100,105)) # Tamanho do ladrao
 policia = pygame.image.load('imagens/policia.png').convert_alpha()
 policia = pygame.transform.scale(policia, (100,100)) # Tamanho da policia
 
-# Vidas
+# Imagens Vidas
 vida1 = pygame.image.load('imagens/1vida.png').convert_alpha()
-vida1 = pygame.transform.scale(vida1, (14,12))
+vida1 = pygame.transform.scale(vida1, (17.5,15))
 vida2 = pygame.image.load('imagens/2vidas.png').convert_alpha()
-vida2 = pygame.transform.scale(vida2, (32,12))
+vida2 = pygame.transform.scale(vida2, (40,15))
 vida3 = pygame.image.load('imagens/3vidas.png').convert_alpha()
-vida3 = pygame.transform.scale(vida3, (50,12))
+vida3 = pygame.transform.scale(vida3, (62.5,15))
 
-
+# Numero de batidas de cada carro
+batidas_lad = 0
+batidas_pol = 1
 
 jogo = True # Variavel para o jogo ficar rodando
 
@@ -54,11 +56,25 @@ while jogo:
     screen.blit(bg, (0,rel_y - bg.get_rect().height))
     if rel_y < 480:
         screen.blit(bg,(0,rel_y))
-    y += 0.80
+    y += 1
 
     screen.blit(ladrao, (ladrao_x,ladrao_y))
     screen.blit(policia, (policia_x,policia_y))
-    screen.blit(vida3, (20,20))
 
+    # Vidas ladrão
+    if batidas_lad == 0:
+        screen.blit(vida3, (15,30))
+    if batidas_lad == 1:
+        screen.blit(vida2, (15,30))
+    if batidas_lad == 2:
+        screen.blit(vida1,(15,30))
+    
+    # Vidas policia
+    if batidas_pol == 0:
+        screen.blit(vida3, (530,30))
+    if batidas_pol == 1:
+        screen.blit(vida2, (530,30))
+    if batidas_pol == 2:
+        screen.blit(vida1,(530,30))
 
     pygame.display.update()
