@@ -29,6 +29,14 @@ ladrao = pygame.transform.scale(ladrao, (100,105)) # Tamanho do ladrao
 policia = pygame.image.load('imagens/policia.png').convert_alpha()
 policia = pygame.transform.scale(policia, (100,100)) # Tamanho da policia
 
+# Vidas
+vida1 = pygame.image.load('imagens/1vida.png').convert_alpha()
+vida1 = pygame.transform.scale(vida1, (14,12))
+vida2 = pygame.image.load('imagens/2vidas.png').convert_alpha()
+vida2 = pygame.transform.scale(vida2, (32,12))
+vida3 = pygame.image.load('imagens/3vidas.png').convert_alpha()
+vida3 = pygame.transform.scale(vida3, (50,12))
+
 
 
 jogo = True # Variavel para o jogo ficar rodando
@@ -50,6 +58,7 @@ while jogo:
 
     screen.blit(ladrao, (ladrao_x,ladrao_y))
     screen.blit(policia, (policia_x,policia_y))
+    screen.blit(vida3, (20,20))
 
 
     pygame.display.update()
