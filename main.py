@@ -1,6 +1,7 @@
+
 import pygame
 import random
-import funcoes
+
 
 
 pygame.init()  # Iniciando o pygame
@@ -39,7 +40,7 @@ vida3 = pygame.transform.scale(vida3, (62.5,15))
 
 # Numero de batidas de cada carro
 batidas_lad = 0
-batidas_pol = 1
+batidas_pol = 0
 
 jogo = True # Variavel para o jogo ficar rodando
 
@@ -58,23 +59,32 @@ while jogo:
         screen.blit(bg,(0,rel_y))
     y += 1
 
-    screen.blit(ladrao, (ladrao_x,ladrao_y))
-    screen.blit(policia, (policia_x,policia_y))
-
-    # Vidas ladrão
+    # Imagens
+    screen.blit(ladrao, (ladrao_x,ladrao_y)) # Ladrão
+    screen.blit(policia, (policia_x,policia_y)) # Policia
+    # Vidas
     if batidas_lad == 0:
         screen.blit(vida3, (15,30))
     if batidas_lad == 1:
         screen.blit(vida2, (15,30))
     if batidas_lad == 2:
         screen.blit(vida1,(15,30))
-    
-    # Vidas policia
     if batidas_pol == 0:
         screen.blit(vida3, (530,30))
     if batidas_pol == 1:
         screen.blit(vida2, (530,30))
     if batidas_pol == 2:
         screen.blit(vida1,(530,30))
+
+    # Comandos
+    tecla = pygame.key.get_pressed()
+    if tecla[pygame.K_RIGHT] and policia_x < 400:
+        policia_x += 3
+    if tecla[pygame.K_LEFT] and policia_x > 102.5:
+        policia_x -= 3
+    if tecla[pygame.K_d] and ladrao_x < 400:
+        ladrao_x += 3
+    if tecla[pygame.K_a] and ladrao_x > 102.5:
+        ladrao_x -= 3
 
     pygame.display.update()
