@@ -73,7 +73,7 @@ o = 0 # Teste
 # Texto
 font = pygame.font.SysFont(None, 24)
 ladraotxt = font.render('LADRÃO', True, (0, 0, 0))
-policiatxt = font.render('POLICIA', True, (0, 0, 0))
+policiatxt = font.render('POLÍCIA', True, (0, 0, 0))
 
 
 # Numero de batidas de cada carro
@@ -101,10 +101,12 @@ while jogo:
     screen.blit(ladrao, (ladrao_x,ladrao_y)) # Ladrão
     screen.blit(policia, (policia_x,policia_y)) # Policia
     pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
-    pygame.draw.rect(screen, corquad, pygame.Rect(512,15,88,50)) # Retângulo Vida Policia
+    pygame.draw.rect(screen, corquad, pygame.Rect(513,15,88,50)) # Retângulo Vida Policia
+    pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
+    pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
 
     # Obstáculos
-    if o > 50: # Teste
+    if o == 50: # Teste
         aleatorio(obstaculos)
 
     # Vidas
@@ -134,7 +136,7 @@ while jogo:
     
     # Texto das Vidas
     screen.blit(ladraotxt, (9, 20))
-    screen.blit(policiatxt, (527, 20))
+    screen.blit(policiatxt, (526, 21))
 
     o += 1 # Teste dos obstáculos
 
