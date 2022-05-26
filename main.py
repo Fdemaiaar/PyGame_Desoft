@@ -1,4 +1,7 @@
+from importlib.machinery import EXTENSION_SUFFIXES
 import pygame
+import random
+import numpy as np
 import os
 
 
@@ -14,8 +17,6 @@ ladrao_x = 200
 ladrao_y = 230
 policia_x = 300
 policia_y = 350
-
-
 
 # criando a tela
 screen = pygame.display.set_mode((x,y))
@@ -44,7 +45,30 @@ vida2 = pygame.image.load('imagens/2vidas.png').convert_alpha()
 vida2 = pygame.transform.scale(vida2, (40,15))
 vida3 = pygame.image.load('imagens/3vidas.png').convert_alpha()
 vida3 = pygame.transform.scale(vida3, (62.5,15))
-corquad = (245,245,220)
+corquad = (253,196,101) # Cor do Quadrado
+
+# Imagens Obstáculos
+cone = pygame.image.load('imagens/cone.png').convert_alpha()
+cone = pygame.transform.scale(cone, (70,70))
+pedra = pygame.image.load('imagens/pedra.jpg').convert_alpha()
+pedra = pygame.transform.scale(pedra, (70,70))
+roda = pygame.image.load('imagens/roda.PNG').convert_alpha()
+roda = pygame.transform.scale(roda, (70,70))
+obstaculos = ["cone","pedra","roda"] # lista para entrar na função
+
+# Função que seleciona o obstáculo aleatoriamente
+def aleatorio(lista):
+    selecionado = random.choice(lista)
+    eixo_x = np.arange(110,490,30)
+    obs_x = random.choice(eixo_x)
+    obs_y = 0
+    if selecionado == "cone":
+        return screen.blit(cone, (obs_x,obs_y))
+    elif selecionado == "pedra":
+        return  screen.blit(pedra, (obs_x,obs_y))
+    elif selecionado == "roda":
+        return  screen.blit(roda, (obs_x,obs_y))
+o = 0 # Teste
 
 # Texto
 font = pygame.font.SysFont(None, 24)
@@ -76,8 +100,12 @@ while jogo:
     # Imagens
     screen.blit(ladrao, (ladrao_x,ladrao_y)) # Ladrão
     screen.blit(policia, (policia_x,policia_y)) # Policia
-    pygame.draw.rect(screen, corquad, pygame.Rect(0,15,88,50)) # Retângulo Vida ladrão
+    pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
     pygame.draw.rect(screen, corquad, pygame.Rect(512,15,88,50)) # Retângulo Vida Policia
+
+    # Obstáculos
+    if o > 50: # Teste
+        aleatorio(obstaculos)
 
     # Vidas
     if batidas_lad == 0:
@@ -96,16 +124,18 @@ while jogo:
     # Comandos
     tecla = pygame.key.get_pressed()
     if tecla[pygame.K_RIGHT] and policia_x < 400:
-        policia_x += 3
+        policia_x += 2
     if tecla[pygame.K_LEFT] and policia_x > 102.5:
-        policia_x -= 3
+        policia_x -= 2
     if tecla[pygame.K_d] and ladrao_x < 400:
-        ladrao_x += 3
+        ladrao_x += 2
     if tecla[pygame.K_a] and ladrao_x > 102.5:
-        ladrao_x -= 3
+        ladrao_x -= 2
     
     # Texto das Vidas
     screen.blit(ladraotxt, (9, 20))
     screen.blit(policiatxt, (527, 20))
+
+    o += 1 # Teste dos obstáculos
 
     pygame.display.update()
