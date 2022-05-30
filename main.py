@@ -1,3 +1,4 @@
+# Importando Bibliotecas
 from importlib.machinery import EXTENSION_SUFFIXES
 import pygame
 import random
@@ -47,28 +48,26 @@ vida3 = pygame.image.load('imagens/3vidas.png').convert_alpha()
 vida3 = pygame.transform.scale(vida3, (62.5,15))
 corquad = (253,196,101) # Cor do Quadrado
 
-# Imagens Obstáculos
-cone = pygame.image.load('imagens/cone.png').convert_alpha()
-cone = pygame.transform.scale(cone, (70,70))
-pedra = pygame.image.load('imagens/pedra.jpg').convert_alpha()
-pedra = pygame.transform.scale(pedra, (70,70))
-roda = pygame.image.load('imagens/roda.PNG').convert_alpha()
-roda = pygame.transform.scale(roda, (70,70))
-obstaculos = ["cone","pedra","roda"] # lista para entrar na função
+#Obstáculos
+class Obstaculo:
+    def __init__(self, arquivo ,tamanhox, tamanhoy):
+        self.arquivo = arquivo
+        self.tamanhox = tamanhox
+        self.tamanhoy = tamanhoy
+        self.obs = pygame.image.load(self.arquivo).convert_alpha()
 
-# Função que seleciona o obstáculo aleatoriamente
-def aleatorio(lista):
-    selecionado = random.choice(lista)
-    eixo_x = np.arange(110,490,30)
-    obs_x = random.choice(eixo_x)
-    obs_y = 0
-    if selecionado == "cone":
-        return screen.blit(cone, (obs_x,obs_y))
-    elif selecionado == "pedra":
-        return  screen.blit(pedra, (obs_x,obs_y))
-    elif selecionado == "roda":
-        return  screen.blit(roda, (obs_x,obs_y))
-o = 0 # Teste
+    def carregar(self):
+        return pygame.transform.scale(self.obs,(self.tamanhox,self.tamanhoy))
+    
+    def plot(self, x):
+        return screen.blit(self.obs,(x,0))
+
+cone = Obstaculo('imagens/cone.png', 10, 10)
+pedra = Obstaculo('imagens/pedra.jpg', 10, 10)
+roda = Obstaculo('imagens/roda.PNG', 10, 10)
+possivel_x = np.arange(110,411,100) # lista de possíveis posições x pro obstáculo
+obstaculos = [cone,pedra,roda] # lista para entrar na função
+
 
 # Texto
 font = pygame.font.SysFont(None, 24)
@@ -81,6 +80,7 @@ batidas_lad = 0
 batidas_pol = 0
 
 jogo = True # Variavel para o jogo ficar rodando
+obst = False # Variavel 
 
 # loop do Jogo
 while jogo:
@@ -97,6 +97,16 @@ while jogo:
         screen.blit(bg,(0,rel_y))
     y += 1
 
+    # Obstáculos
+    if obst == False:
+        o = random.choice(obstaculos)
+        x = random.choice(possivel_x)
+        o.carregar()
+        obst == True
+
+    o.plot(x)
+
+
     # Imagens
     screen.blit(ladrao, (ladrao_x,ladrao_y)) # Ladrão
     screen.blit(policia, (policia_x,policia_y)) # Policia
@@ -105,9 +115,8 @@ while jogo:
     pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
     pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
 
-    # Obstáculos
-    if o == 50: # Teste
-        aleatorio(obstaculos)
+    # Colisão
+
 
     # Vidas
     if batidas_lad == 0:
@@ -138,6 +147,5 @@ while jogo:
     screen.blit(ladraotxt, (9, 20))
     screen.blit(policiatxt, (526, 21))
 
-    o += 1 # Teste dos obstáculos
 
     pygame.display.update()
