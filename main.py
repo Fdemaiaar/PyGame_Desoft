@@ -5,8 +5,6 @@ import random
 import numpy as np
 import os
 
-
-
 pygame.init()  # Iniciando o pygame
 
 # Tamanho da tela
@@ -49,24 +47,30 @@ vida3 = pygame.transform.scale(vida3, (62.5,15))
 corquad = (253,196,101) # Cor do Quadrado
 
 #Obstáculos
-class Obstaculo:
+class Obstaculo():
     def __init__(self, arquivo ,tamanhox, tamanhoy):
         self.arquivo = arquivo
         self.tamanhox = tamanhox
         self.tamanhoy = tamanhoy
         self.obs = pygame.image.load(self.arquivo).convert_alpha()
+        self.obs = pygame.transform.scale(self.obs,(self.tamanhox,self.tamanhoy))
 
     def carregar(self):
-        return pygame.transform.scale(self.obs,(self.tamanhox,self.tamanhoy))
+        return self.obs
     
-    def plot(self, x):
-        return screen.blit(self.obs,(x,0))
+    def plot(self, x, y):
+        return screen.blit(self.obs,(x,y))
+    
+    def retangulo(self):
+        return self.obs.get_rect()
 
-cone = Obstaculo('imagens/cone.png', 10, 10)
-pedra = Obstaculo('imagens/pedra.jpg', 10, 10)
-roda = Obstaculo('imagens/roda.PNG', 10, 10)
+cone = Obstaculo('imagens/cone.png', 67, 67)
+pedra = Obstaculo('imagens/pedra.png', 67, 67)
+roda = Obstaculo('imagens/roda.PNG', 67, 67)
+obstaculos = [cone,pedra,roda]
+for obstaculo in obstaculos:
+    obstaculo.carregar()
 possivel_x = np.arange(110,411,100) # lista de possíveis posições x pro obstáculo
-obstaculos = [cone,pedra,roda] # lista para entrar na função
 
 
 # Texto
@@ -89,23 +93,26 @@ while jogo:
             jogo = False
 
     screen.blit(bg, (0,0))
-    
+    velocidade = 1
+
     # Movimento da Pista
     rel_y = y % bg.get_rect().height
     screen.blit(bg, (0,rel_y - bg.get_rect().height))
     if rel_y < 480:
         screen.blit(bg,(0,rel_y))
-    y += 1
+    y += velocidade
 
     # Obstáculos
     if obst == False:
+        obs_x = random.choice(possivel_x)
+        obs_y = 0
         o = random.choice(obstaculos)
-        x = random.choice(possivel_x)
-        o.carregar()
-        obst == True
+        obst = True
+    o.plot(obs_x,obs_y)
+    obs_y += velocidade # Movimento  do obstáculo
 
-    o.plot(x)
-
+    if obs_y == 465:
+        obst = False # se o obstaculo passar a tela não existem mais obstáculo no jogo
 
     # Imagens
     screen.blit(ladrao, (ladrao_x,ladrao_y)) # Ladrão
@@ -115,8 +122,26 @@ while jogo:
     pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
     pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
 
-    # Colisão
+    # Colisões
+    ladrao_rect = ladrao.get_rect()
+    policia_rect = policia.get_rect()
+    obstaculo_rect = o.retangulo()
 
+    ladrao_rect.x = ladrao_x
+    ladrao_rect.y = ladrao_y
+    policia_rect.x = policia_x
+    policia_rect.y = policia_y
+    obstaculo_rect.x = obs_x
+    obstaculo_rect.y = obs_y
+
+    pygame.draw.rect(screen, (255,0,0), ladrao_rect, 4)
+    pygame.draw.rect(screen, (255,0,0), policia_rect, 4)
+    pygame.draw.rect(screen, (255,0,0), obstaculo_rect, 4)
+
+    if ladrao_rect.colliderect(obstaculo_rect):
+        batidas_lad += 1
+    if policia_rect.colliderect(obstaculo_rect):
+        batidas_pol += 1
 
     # Vidas
     if batidas_lad == 0:
