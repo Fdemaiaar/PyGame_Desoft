@@ -11,12 +11,6 @@ pygame.init()  # Iniciando o pygame
 x = 600
 y = 480
 
-# Posições iniciais dos Carros
-ladrao_x = 200
-ladrao_y = 230
-policia_x = 300
-policia_y = 350
-
 # criando a tela
 screen = pygame.display.set_mode((x,y))
 pygame.display.set_caption('DustChase')
@@ -31,23 +25,8 @@ pygame.mixer.music.play(-1)
 bg = pygame.image.load('imagens/bg.jpg').convert_alpha()
 bg = pygame.transform.scale(bg, (x,y))
 
-# Imagens Carros
-ladrao = pygame.image.load('imagens/ladrao.png').convert_alpha()
-ladrao = pygame.transform.scale(ladrao, (100,105)) # Tamanho do ladrao
-policia = pygame.image.load('imagens/policia.png').convert_alpha()
-policia = pygame.transform.scale(policia, (100,100)) # Tamanho da policia
-
-# Imagens Vidas
-vida1 = pygame.image.load('imagens/1vida.png').convert_alpha()
-vida1 = pygame.transform.scale(vida1, (17.5,15))
-vida2 = pygame.image.load('imagens/2vidas.png').convert_alpha()
-vida2 = pygame.transform.scale(vida2, (40,15))
-vida3 = pygame.image.load('imagens/3vidas.png').convert_alpha()
-vida3 = pygame.transform.scale(vida3, (62.5,15))
-corquad = (253,196,101) # Cor do Quadrado
-
-#Obstáculos
-class Obstaculo():
+# Imagens
+class Imagem():
     def __init__(self, arquivo ,tamanhox, tamanhoy):
         self.arquivo = arquivo
         self.tamanhox = tamanhox
@@ -64,14 +43,19 @@ class Obstaculo():
     def retangulo(self):
         return self.obs.get_rect()
 
-cone = Obstaculo('imagens/cone.png', 67, 67)
-pedra = Obstaculo('imagens/pedra.png', 67, 67)
-roda = Obstaculo('imagens/roda.PNG', 67, 67)
-obstaculos = [cone,pedra,roda]
-for obstaculo in obstaculos:
-    obstaculo.carregar()
-possivel_x = np.arange(110,411,100) # lista de possíveis posições x pro obstáculo
+imagens = [Imagem('imagens/ladrao.png',100,105), Imagem('imagens/policia.png',100,100), Imagem('imagens/cone.png', 67, 67), Imagem('imagens/pedra.png', 67, 67), Imagem('imagens/roda.PNG', 67, 67), Imagem('imagens/1vida.png',17.5,15), Imagem('imagens/2vidas.png',40,15), Imagem('imagens/3vidas.png',62.5,15)]
+for imagem in imagens:
+    imagem.carregar()
 
+
+# Posições iniciais dos Carros
+ladrao_x = 200
+ladrao_y = 230
+policia_x = 300
+policia_y = 350
+
+possivel_x = np.arange(110,411,100) # lista de possíveis posições x pro obstáculo
+obstaculos = [imagens[2],imagens[3],imagens[4]]
 
 # Texto
 font = pygame.font.SysFont(None, 24)
@@ -85,6 +69,9 @@ batidas_pol = 0
 
 jogo = True # Variavel para o jogo ficar rodando
 obst = False # Variavel 
+
+corquad = (253,196,101) # Cor do Quadrado
+
 
 # loop do Jogo
 while jogo:
@@ -115,16 +102,13 @@ while jogo:
         obst = False # se o obstaculo passar a tela não existem mais obstáculo no jogo
 
     # Imagens
-    screen.blit(ladrao, (ladrao_x,ladrao_y)) # Ladrão
-    screen.blit(policia, (policia_x,policia_y)) # Policia
-    pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
-    pygame.draw.rect(screen, corquad, pygame.Rect(513,15,88,50)) # Retângulo Vida Policia
-    pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
-    pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
+    imagens[0].plot(ladrao_x,ladrao_y) # Ladrão
+    imagens[1].plot(policia_x,policia_y) # Policia
+
 
     # Colisões
-    ladrao_rect = ladrao.get_rect()
-    policia_rect = policia.get_rect()
+    ladrao_rect = imagens[0].retangulo()
+    policia_rect = imagens[1].retangulo()
     obstaculo_rect = o.retangulo()
 
     ladrao_rect.x = ladrao_x
@@ -144,18 +128,23 @@ while jogo:
         batidas_pol += 1
 
     # Vidas
+    pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
+    pygame.draw.rect(screen, corquad, pygame.Rect(513,15,88,50)) # Retângulo Vida Policia
+    pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
+    pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
+
     if batidas_lad == 0:
-        screen.blit(vida3, (15,40))
+        imagens[7].plot(15,40)
     if batidas_lad == 1:
-        screen.blit(vida2, (15,40))
+        imagens[6].plot(15,40)
     if batidas_lad == 2:
-        screen.blit(vida1,(15,40))
+        imagens[5].plot(15,40)
     if batidas_pol == 0:
-        screen.blit(vida3, (530,40))
+        imagens[7].plot(530,40)
     if batidas_pol == 1:
-        screen.blit(vida2, (530,40))
+        imagens[6].plot(530,40)
     if batidas_pol == 2:
-        screen.blit(vida1,(530,40))
+        imagens[5].plot(530,40)
 
     # Comandos
     tecla = pygame.key.get_pressed()
