@@ -135,15 +135,15 @@ while jogo:
 
     if batidas_lad == 0:
         imagens[7].plot(15,40)
-    if batidas_lad == 1:
+    elif batidas_lad == 1:
         imagens[6].plot(15,40)
-    if batidas_lad == 2:
+    elif batidas_lad == 2:
         imagens[5].plot(15,40)
     if batidas_pol == 0:
         imagens[7].plot(530,40)
-    if batidas_pol == 1:
+    elif batidas_pol == 1:
         imagens[6].plot(530,40)
-    if batidas_pol == 2:
+    elif batidas_pol == 2:
         imagens[5].plot(530,40)
 
     # Comandos
