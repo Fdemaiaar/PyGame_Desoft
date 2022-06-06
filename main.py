@@ -134,6 +134,8 @@ while jogo:
         obs_y += velocidade # Movimento  do obstáculo
 
 
+
+
         # Imagens
         imagens['ladrao'].plot(ladrao_x,ladrao_y) # Ladrão
         imagens['policia'].plot(policia_x,policia_y) # Policia
