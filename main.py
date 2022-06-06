@@ -75,7 +75,7 @@ policiatxt = font.render('POLÍCIA', True, (0, 0, 0))
 # Numero de batidas de cada carro
 batidas_lad = 0
 batidas_pol = 0
-velocidade = 1
+velocidade = 0
 
 jogo = True # Variavel para o jogo ficar rodando
 obst = False # Variavel 
@@ -109,6 +109,10 @@ while jogo:
     screen.blit(bg, (0,0))
     tecla = pygame.key.get_pressed()
 
+    # Entrada Do Jogo
+    if tecla[pygame.K_SPACE]:
+        velocidade = 1
+
     # Movimento da Pista
     rel_y = y % bg.get_rect().height
     screen.blit(bg, (0,rel_y - bg.get_rect().height))
@@ -132,20 +136,16 @@ while jogo:
 
 
     # Colisões
-    ladrao_rect = imagens['ladrao'].retangulo()
-    policia_rect = imagens['policia'].retangulo()
+    ladrao_rect = pygame.Rect((ladrao_x + 24),ladrao_y,52,100)
+    policia_rect = pygame.Rect((policia_x + 23),policia_y,52,100)
     obstaculo_rect = o.retangulo()
 
-    ladrao_rect.x = ladrao_x
-    ladrao_rect.y = ladrao_y
-    policia_rect.x = policia_x
-    policia_rect.y = policia_y
     obstaculo_rect.x = obs_x
     obstaculo_rect.y = obs_y
 
-    pygame.draw.rect(screen, (255,0,0), ladrao_rect, 4)
-    pygame.draw.rect(screen, (255,0,0), policia_rect, 4)
-    pygame.draw.rect(screen, (255,0,0), obstaculo_rect, 4)
+    #pygame.draw.rect(screen, (0,0,0), ladrao_rect, 4)
+    #pygame.draw.rect(screen, (0,0,0), policia_rect, 4)
+    #pygame.draw.rect(screen, (0,0,0), obstaculo_rect, 4)
 
     if colisao() or obs_y == 465: # se o obstaculo passar a tela ou tiver uma colisao
         obst = False
