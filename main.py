@@ -41,7 +41,7 @@ class Imagem():
         return screen.blit(self.img,(x,y))
     
     def retangulo(self):
-        return self.img.get_rect()
+        return (self.img).get_rect()
 
 imagens = {
     'ladrao': Imagem('imagens/ladrao.png',100,105), 
@@ -54,9 +54,8 @@ imagens = {
     '3vidas': Imagem('imagens/3vidas.png',62.5,15)
 }
 
-for imagem in imagens.keys():
-    imagens[imagem].carregar()
-
+for imagem in imagens.values():
+    imagem.carregar()
 
 # Posições iniciais dos Carros
 ladrao_x = 200
@@ -76,12 +75,30 @@ policiatxt = font.render('POLÍCIA', True, (0, 0, 0))
 # Numero de batidas de cada carro
 batidas_lad = 0
 batidas_pol = 0
+velocidade = 1
 
 jogo = True # Variavel para o jogo ficar rodando
 obst = False # Variavel 
 
 corquad = (253,196,101) # Cor do Quadrado
 
+def colisao():
+    global batidas_lad
+    global batidas_pol
+    global velocidade
+    if ladrao_rect.colliderect(obstaculo_rect):
+        batidas_lad += 1
+        if batidas_lad == 3:
+            velocidade = 0
+        return True
+    if policia_rect.colliderect(obstaculo_rect):
+        batidas_pol += 1
+        if batidas_pol == 3:
+            velocidade = 0 
+        return True
+    else:
+        return False
+    
 
 # loop do Jogo
 while jogo:
@@ -90,7 +107,6 @@ while jogo:
             jogo = False # Encerra o jogo quando o usuário sai da tela
 
     screen.blit(bg, (0,0))
-    velocidade = 2
     tecla = pygame.key.get_pressed()
 
     # Movimento da Pista
@@ -109,8 +125,6 @@ while jogo:
     o.plot(obs_x,obs_y)
     obs_y += velocidade # Movimento  do obstáculo
 
-    if obs_y == 465:
-        obst = False # se o obstaculo passar a tela não existem mais obstáculo no jogo
 
     # Imagens
     imagens['ladrao'].plot(ladrao_x,ladrao_y) # Ladrão
@@ -133,10 +147,8 @@ while jogo:
     pygame.draw.rect(screen, (255,0,0), policia_rect, 4)
     pygame.draw.rect(screen, (255,0,0), obstaculo_rect, 4)
 
-    if ladrao_rect.colliderect(obstaculo_rect):
-        batidas_lad += 1
-    if policia_rect.colliderect(obstaculo_rect):
-        batidas_pol += 1
+    if colisao() or obs_y == 465: # se o obstaculo passar a tela não existem mais obstáculo no jogo
+        obst = False
 
     # Vidas
     pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
@@ -146,26 +158,27 @@ while jogo:
 
     if batidas_lad == 0:
         imagens['3vidas'].plot(15,40)
-    elif batidas_lad == 1:
+    if batidas_lad == 1:
         imagens['2vidas'].plot(15,40)
-    elif batidas_lad == 2:
+    if batidas_lad == 2:
         imagens['1vida'].plot(15,40)
     if batidas_pol == 0:
         imagens['3vidas'].plot(530,40)
-    elif batidas_pol == 1:
+    if batidas_pol == 1:
         imagens['2vidas'].plot(530,40)
-    elif batidas_pol == 2:
+    if batidas_pol == 2:
         imagens['1vida'].plot(530,40)
 
     # Comandos
-    if tecla[pygame.K_RIGHT] and policia_x < 400:
-        policia_x += 2
-    if tecla[pygame.K_LEFT] and policia_x > 102.5:
-        policia_x -= 2
-    if tecla[pygame.K_d] and ladrao_x < 400:
-        ladrao_x += 2
-    if tecla[pygame.K_a] and ladrao_x > 102.5:
-        ladrao_x -= 2
+    if velocidade != 0:
+        if tecla[pygame.K_RIGHT] and policia_x < 400:
+            policia_x += 2
+        if tecla[pygame.K_LEFT] and policia_x > 102.5:
+            policia_x -= 2
+        if tecla[pygame.K_d] and ladrao_x < 400:
+            ladrao_x += 2
+        if tecla[pygame.K_a] and ladrao_x > 102.5:
+            ladrao_x -= 2
     
     # Texto das Vidas
     screen.blit(ladraotxt, (9, 20))
