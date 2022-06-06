@@ -51,7 +51,8 @@ imagens = {
     'roda': Imagem('imagens/roda.PNG', 67, 67),
     '1vida': Imagem('imagens/1vida.png',17.5,15),
     '2vidas': Imagem('imagens/2vidas.png',40,15),
-    '3vidas': Imagem('imagens/3vidas.png',62.5,15)
+    '3vidas': Imagem('imagens/3vidas.png',62.5,15),
+    'space': Imagem('imagens/space.png', 300,240)
 }
 
 for imagem in imagens.values():
@@ -110,79 +111,82 @@ while jogo:
     tecla = pygame.key.get_pressed()
 
     # Entrada Do Jogo
+    imagens['space'].plot(250,220)
     if tecla[pygame.K_SPACE]:
         velocidade = 1
 
-    # Movimento da Pista
-    rel_y = y % bg.get_rect().height
-    screen.blit(bg, (0,rel_y - bg.get_rect().height))
-    if rel_y < 480:
-        screen.blit(bg,(0,rel_y))
-    y += velocidade
+    if velocidade > 0:
+        
+        # Movimento da Pista
+        rel_y = y % bg.get_rect().height
+        screen.blit(bg, (0,rel_y - bg.get_rect().height))
+        if rel_y < 480:
+            screen.blit(bg,(0,rel_y))
+        y += velocidade
 
-    # Obstáculos
-    if obst == False:
-        obs_x = random.choice(possivel_x)
-        obs_y = 0
-        o = random.choice(obstaculos)
-        obst = True
-    o.plot(obs_x,obs_y)
-    obs_y += velocidade # Movimento  do obstáculo
-
-
-    # Imagens
-    imagens['ladrao'].plot(ladrao_x,ladrao_y) # Ladrão
-    imagens['policia'].plot(policia_x,policia_y) # Policia
+        # Obstáculos
+        if obst == False:
+            obs_x = random.choice(possivel_x)
+            obs_y = 0
+            o = random.choice(obstaculos)
+            obst = True
+        o.plot(obs_x,obs_y)
+        obs_y += velocidade # Movimento  do obstáculo
 
 
-    # Colisões
-    ladrao_rect = pygame.Rect((ladrao_x + 24),ladrao_y,52,100)
-    policia_rect = pygame.Rect((policia_x + 23),policia_y,52,100)
-    obstaculo_rect = o.retangulo()
+        # Imagens
+        imagens['ladrao'].plot(ladrao_x,ladrao_y) # Ladrão
+        imagens['policia'].plot(policia_x,policia_y) # Policia
 
-    obstaculo_rect.x = obs_x
-    obstaculo_rect.y = obs_y
 
-    #pygame.draw.rect(screen, (0,0,0), ladrao_rect, 4)
-    #pygame.draw.rect(screen, (0,0,0), policia_rect, 4)
-    #pygame.draw.rect(screen, (0,0,0), obstaculo_rect, 4)
+        # Colisões
+        ladrao_rect = pygame.Rect((ladrao_x + 24),ladrao_y,52,100)
+        policia_rect = pygame.Rect((policia_x + 23),policia_y,52,100)
+        obstaculo_rect = o.retangulo()
 
-    if colisao() or obs_y == 465: # se o obstaculo passar a tela ou tiver uma colisao
-        obst = False
+        obstaculo_rect.x = obs_x
+        obstaculo_rect.y = obs_y
 
-    # Vidas
-    pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
-    pygame.draw.rect(screen, corquad, pygame.Rect(513,15,88,50)) # Retângulo Vida Policia
-    pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
-    pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
+        if colisao() or obs_y == 465: # se o obstaculo passar a tela ou tiver uma colisao
+            obst = False
 
-    if batidas_lad == 0:
-        imagens['3vidas'].plot(15,40)
-    if batidas_lad == 1:
-        imagens['2vidas'].plot(15,40)
-    if batidas_lad == 2:
-        imagens['1vida'].plot(15,40)
-    if batidas_pol == 0:
-        imagens['3vidas'].plot(530,40)
-    if batidas_pol == 1:
-        imagens['2vidas'].plot(530,40)
-    if batidas_pol == 2:
-        imagens['1vida'].plot(530,40)
+        # Vidas
+        pygame.draw.rect(screen, corquad, pygame.Rect(0,15,87,50)) # Retângulo Vida ladrão
+        pygame.draw.rect(screen, corquad, pygame.Rect(513,15,88,50)) # Retângulo Vida Policia
+        pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
+        pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
 
-    # Comandos
-    if velocidade != 0:
-        if tecla[pygame.K_RIGHT] and policia_x < 400:
-            policia_x += 2
-        if tecla[pygame.K_LEFT] and policia_x > 102.5:
-            policia_x -= 2
-        if tecla[pygame.K_d] and ladrao_x < 400:
-            ladrao_x += 2
-        if tecla[pygame.K_a] and ladrao_x > 102.5:
-            ladrao_x -= 2
-    
-    # Texto das Vidas
-    screen.blit(ladraotxt, (9, 20))
-    screen.blit(policiatxt, (526, 21))
+        if batidas_lad == 0:
+            imagens['3vidas'].plot(15,40)
+        if batidas_lad == 1:
+            imagens['2vidas'].plot(15,40)
+        if batidas_lad == 2:
+            imagens['1vida'].plot(15,40)
+        if batidas_pol == 0:
+            imagens['3vidas'].plot(530,40)
+        if batidas_pol == 1:
+            imagens['2vidas'].plot(530,40)
+        if batidas_pol == 2:
+            imagens['1vida'].plot(530,40)
 
+        # Comandos
+        if velocidade != 0:
+            if tecla[pygame.K_RIGHT] and policia_x < 400:
+                policia_x += 2
+            if tecla[pygame.K_LEFT] and policia_x > 102.5:
+                policia_x -= 2
+            if tecla[pygame.K_d] and ladrao_x < 400:
+                ladrao_x += 2
+            if tecla[pygame.K_a] and ladrao_x > 102.5:
+                ladrao_x -= 2
+        
+        # Texto das Vidas
+        screen.blit(ladraotxt, (9, 20))
+        screen.blit(policiatxt, (526, 21))
+
+    # Renovando as Vidas
+    if batidas_lad == 3 or batidas_pol == 3:
+        batidas_lad = 0
+        batidas_pol = 0
 
     pygame.display.update()
