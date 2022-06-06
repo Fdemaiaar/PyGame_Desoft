@@ -147,7 +147,7 @@ while jogo:
     pygame.draw.rect(screen, (255,0,0), policia_rect, 4)
     pygame.draw.rect(screen, (255,0,0), obstaculo_rect, 4)
 
-    if colisao() or obs_y == 465: # se o obstaculo passar a tela não existem mais obstáculo no jogo
+    if colisao() or obs_y == 465: # se o obstaculo passar a tela ou tiver uma colisao
         obst = False
 
     # Vidas
