@@ -127,11 +127,12 @@ while jogo:
 
     screen.blit(bg, (0,0))
     tecla = pygame.key.get_pressed()
-    som_radio.play()
+    
 
     # Entrada Do Jogo
     if entrada:
         imagens['entrada'].plot(110,70)
+        som_radio.play()
     if reentrada_p:
         imagens['vitpol'].plot(44,40)
     if reentrada_l:
