@@ -16,7 +16,7 @@ screen = pygame.display.set_mode((x,y))
 pygame.display.set_caption('DustChase')
 
 # Musicas
-pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.set_volume(0.2)
 som_sirene = pygame.mixer.music.load('sons/sirene.mp3')
 pygame.mixer.music.play(-1)
 som_colisao = pygame.mixer.Sound('sons/colisao.wav')
@@ -83,6 +83,8 @@ policiatxt = font.render('POLÍCIA', True, (0, 0, 0))
 batidas_lad = 0
 batidas_pol = 0
 velocidade = 0
+tempo = 0
+
 
 jogo = True # Variavel para o jogo ficar rodando
 obst = False # Variavel para os obstáculos
@@ -125,6 +127,7 @@ while jogo:
 
     screen.blit(bg, (0,0))
     tecla = pygame.key.get_pressed()
+    som_radio.play()
 
     # Entrada Do Jogo
     if entrada:
@@ -134,14 +137,17 @@ while jogo:
     if reentrada_l:
         imagens['vitlad'].plot(90,65)
     if tecla[pygame.K_SPACE]:
-        som_radio.play()
-        velocidade = 2
+        velocidade = 1.2
         entrada = False
         reentrada_p = False
         reentrada_l = False
 
     if velocidade > 0:
-
+        som_radio.stop()
+        tempo += 1
+        t = tempo % 180
+        if t == 0:
+            velocidade += 0.1
         # Movimento da Pista
         rel_y = y % bg.get_rect().height
         screen.blit(bg, (0,rel_y - bg.get_rect().height))
