@@ -15,11 +15,15 @@ y = 480
 screen = pygame.display.set_mode((x,y))
 pygame.display.set_caption('DustChase')
 
-# Musica
-arquivo = os.path.join('Imagens', 'background.ogg')
-pygame.mixer.music.load(arquivo)
-pygame.mixer.music.set_volume(0.2)
+# Musicas
+pygame.mixer.music.set_volume(0.3)
+som_sirene = pygame.mixer.music.load('sons/sirene.mp3')
 pygame.mixer.music.play(-1)
+som_colisao = pygame.mixer.Sound('sons/colisao.wav')
+som_colisaof = pygame.mixer.Sound('sons/colisao-final.wav')
+som_radio = pygame.mixer.Sound('sons/police-radio.wav')
+
+
 
 # Background
 bg = pygame.image.load('imagens/bg.jpg').convert_alpha()
@@ -52,7 +56,9 @@ imagens = {
     '1vida': Imagem('imagens/1vida.png',17.5,15),
     '2vidas': Imagem('imagens/2vidas.png',40,15),
     '3vidas': Imagem('imagens/3vidas.png',62.5,15),
-    'space': Imagem('imagens/space.png', 300,240)
+    'entrada': Imagem('imagens/foto-entrada.png', 380,320),
+    'vitlad':Imagem('imagens/vitlad.png', 380,320),
+    'vitpol':Imagem('imagens/vitpol.png', 380,320)
 }
 
 for imagem in imagens.values():
@@ -79,7 +85,9 @@ batidas_pol = 0
 velocidade = 0
 
 jogo = True # Variavel para o jogo ficar rodando
-obst = False # Variavel 
+obst = False # Variavel para os obstáculos
+entrada = True # Variavel para a musica da entrada
+radio = False # Variavel para o radio policial
 
 corquad = (253,196,101) # Cor do Quadrado
 
@@ -91,15 +99,21 @@ def colisao():
         batidas_lad += 1
         if batidas_lad == 3:
             velocidade = 0
+            som_colisaof.play()
+        else:
+            som_colisao.play()
         return True
     if policia_rect.colliderect(obstaculo_rect):
         batidas_pol += 1
         if batidas_pol == 3:
             velocidade = 0 
+            som_colisaof.play()
+        else:
+            som_colisao.play()           
         return True
     else:
         return False
-    
+        
 
 # loop do Jogo
 while jogo:
@@ -111,12 +125,14 @@ while jogo:
     tecla = pygame.key.get_pressed()
 
     # Entrada Do Jogo
-    imagens['space'].plot(250,220)
+    imagens['entrada'].plot(110,70)
     if tecla[pygame.K_SPACE]:
+        som_radio.play()
         velocidade = 1
+        entrada = False
 
     if velocidade > 0:
-        
+
         # Movimento da Pista
         rel_y = y % bg.get_rect().height
         screen.blit(bg, (0,rel_y - bg.get_rect().height))
@@ -132,8 +148,6 @@ while jogo:
             obst = True
         o.plot(obs_x,obs_y)
         obs_y += velocidade # Movimento  do obstáculo
-
-
 
 
         # Imagens
@@ -187,8 +201,15 @@ while jogo:
         screen.blit(policiatxt, (526, 21))
 
     # Renovando as Vidas
-    if batidas_lad == 3 or batidas_pol == 3:
+    if batidas_lad == 3:
         batidas_lad = 0
         batidas_pol = 0
+        entrada = True
+        imagens['vitpol'].plot(110,70)
+    if batidas_pol == 3:
+        batidas_lad = 0
+        batidas_pol = 0
+        entrada = True
+        imagens['vitlad'].plot(110,70)
 
     pygame.display.update()
