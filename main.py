@@ -172,7 +172,7 @@ while jogo:
         obstaculo_rect.x = obs_x
         obstaculo_rect.y = obs_y
 
-        if colisao() or obs_y == 465: # se o obstaculo passar a tela ou tiver uma colisao
+        if colisao() or obs_y >= 465: # se o obstaculo passar a tela ou tiver uma colisao
             obst = False
 
         # Vidas
