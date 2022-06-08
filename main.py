@@ -135,7 +135,7 @@ while jogo:
         imagens['vitlad'].plot(90,65)
     if tecla[pygame.K_SPACE]:
         som_radio.play()
-        velocidade = 3
+        velocidade = 2
         entrada = False
         reentrada_p = False
         reentrada_l = False
