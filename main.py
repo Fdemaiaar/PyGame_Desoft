@@ -57,8 +57,8 @@ imagens = {
     '2vidas': Imagem('imagens/2vidas.png',40,15),
     '3vidas': Imagem('imagens/3vidas.png',62.5,15),
     'entrada': Imagem('imagens/foto-entrada.png', 380,320),
-    'vitlad':Imagem('imagens/vitlad.png', 380,320),
-    'vitpol':Imagem('imagens/vitpol.png', 380,320)
+    'vitlad':Imagem('imagens/vitlad.png', 490,370),
+    'vitpol':Imagem('imagens/vitpol.png', 490,370)
 }
 
 for imagem in imagens.values():
@@ -88,6 +88,8 @@ jogo = True # Variavel para o jogo ficar rodando
 obst = False # Variavel para os obstáculos
 entrada = True # Variavel para a musica da entrada
 radio = False # Variavel para o radio policial
+reentrada_p = False
+reentrada_l = False
 
 corquad = (253,196,101) # Cor do Quadrado
 
@@ -125,11 +127,18 @@ while jogo:
     tecla = pygame.key.get_pressed()
 
     # Entrada Do Jogo
-    imagens['entrada'].plot(110,70)
+    if entrada:
+        imagens['entrada'].plot(110,70)
+    if reentrada_p:
+        imagens['vitpol'].plot(44,40)
+    if reentrada_l:
+        imagens['vitlad'].plot(90,65)
     if tecla[pygame.K_SPACE]:
         som_radio.play()
-        velocidade = 1
+        velocidade = 3
         entrada = False
+        reentrada_p = False
+        reentrada_l = False
 
     if velocidade > 0:
 
@@ -200,16 +209,15 @@ while jogo:
         screen.blit(ladraotxt, (9, 20))
         screen.blit(policiatxt, (526, 21))
 
-    # Renovando as Vidas
+    # Renovando as Vidas e declarando vitória
     if batidas_lad == 3:
         batidas_lad = 0
         batidas_pol = 0
-        entrada = True
-        imagens['vitpol'].plot(110,70)
+        reentrada_p = True
     if batidas_pol == 3:
         batidas_lad = 0
         batidas_pol = 0
-        entrada = True
-        imagens['vitlad'].plot(110,70)
+        reentrada_l = True
+        
 
     pygame.display.update()
