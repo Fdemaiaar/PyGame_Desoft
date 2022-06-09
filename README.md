@@ -13,4 +13,5 @@ Para controlar o POLICIAL o jogador deve utilizar os botões:
 seta para esquerda ---> move o carro para esquerda
 seta para direita ---> move o carro para direita
 
-(link video de apresentacão)
+Video de Apresentação:
+https://youtu.be/rhNFAafLa0I
