@@ -47,6 +47,7 @@ class Imagem():
     def retangulo(self):
         return (self.img).get_rect()
 
+
 imagens = {
     'ladrao': Imagem('imagens/ladrao.png',100,105), 
     'policia': Imagem('imagens/policia.png',100,100),
@@ -60,6 +61,25 @@ imagens = {
     'vitlad':Imagem('imagens/vitlad.png', 490,370),
     'vitpol':Imagem('imagens/vitpol.png', 490,370)
 }
+class Vida():
+    def __init__(self, batidas, x, y):
+        self.batidas = batidas
+        self.x = x
+        self.y = y
+
+    def plotVidas(self):
+        global reentrada
+        if self.batidas == 0:
+            imagens['3vidas'].plot(self.x,self.y)
+        elif self.batidas == 1:
+            imagens['2vidas'].plot(self.x,self.y)
+        elif self.batidas == 2:
+            imagens['1vida'].plot(self.x,self.y)
+
+        if self.batidas == 3:
+            reentrada = True
+
+
 
 for imagem in imagens.values():
     imagem.carregar()
@@ -90,8 +110,7 @@ jogo = True # Variavel para o jogo ficar rodando
 obst = False # Variavel para os obstáculos
 entrada = True # Variavel para a musica da entrada
 radio = False # Variavel para o radio policial
-reentrada_p = False
-reentrada_l = False
+reentrada = False # Variavel para reentrada do jogo
 
 corquad = (253,196,101) # Cor do Quadrado
 
@@ -133,15 +152,21 @@ while jogo:
     if entrada:
         imagens['entrada'].plot(110,70)
         som_radio.play()
-    if reentrada_p:
-        imagens['vitpol'].plot(44,40)
-    if reentrada_l:
-        imagens['vitlad'].plot(90,65)
+
+    if reentrada:
+        if vidaLadrao.batidas > vidaPolicia.batidas:
+            imagens['vitpol'].plot(44,40)
+            batidas_lad = 0
+            batidas_pol = 0
+        else:
+            imagens['vitlad'].plot(44,40)
+            batidas_lad = 0
+            batidas_pol = 0
+
     if tecla[pygame.K_SPACE]:
         velocidade = 1.2
         entrada = False
-        reentrada_p = False
-        reentrada_l = False
+        reentrada = False
 
     if velocidade > 0:
         som_radio.stop()
@@ -188,19 +213,6 @@ while jogo:
         pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,15,87,50),4) # Contorno Retângulo Vida ladrão
         pygame.draw.rect(screen, (0,0,0), pygame.Rect(513,15,88,50),4) # Contorno Retângulo Vida Policia
 
-        if batidas_lad == 0:
-            imagens['3vidas'].plot(15,40)
-        if batidas_lad == 1:
-            imagens['2vidas'].plot(15,40)
-        if batidas_lad == 2:
-            imagens['1vida'].plot(15,40)
-        if batidas_pol == 0:
-            imagens['3vidas'].plot(530,40)
-        if batidas_pol == 1:
-            imagens['2vidas'].plot(530,40)
-        if batidas_pol == 2:
-            imagens['1vida'].plot(530,40)
-
         # Comandos
         if velocidade != 0:
             if tecla[pygame.K_RIGHT] and policia_x < 400:
@@ -216,15 +228,12 @@ while jogo:
         screen.blit(ladraotxt, (9, 20))
         screen.blit(policiatxt, (526, 21))
 
-    # Renovando as Vidas e declarando vitória
-    if batidas_lad == 3:
-        batidas_lad = 0
-        batidas_pol = 0
-        reentrada_p = True
-    if batidas_pol == 3:
-        batidas_lad = 0
-        batidas_pol = 0
-        reentrada_l = True
+    # Executando função Vidas():
+        vidaPolicia = Vida(batidas_pol,530,40)
+        vidaPolicia.plotVidas()
+        vidaLadrao = Vida(batidas_lad, 15,40)
+        vidaLadrao.plotVidas()
+    
         
 
     pygame.display.update()
